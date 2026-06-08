@@ -20,7 +20,7 @@ def load_documents():
     return documents
 
 
-def chunk_document(text, game_name):
+def chunk_document(text, game_name, chunk_size=300, overlap=50, min_length=50):
     """
     Split a rule document into chunks ready for embedding.
 
@@ -42,10 +42,6 @@ def chunk_document(text, game_name):
       - "game"     : the game name, e.g. "Catan" (str)
       - "chunk_id" : a unique identifier, e.g. "catan_0", "catan_1" (str)
     """
-    chunk_size = 300
-    overlap = 50
-    min_length = 50
-
     chunks = []
     prefix = game_name.lower().replace(" ", "_")
     counter = 0

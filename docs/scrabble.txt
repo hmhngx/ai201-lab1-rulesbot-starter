@@ -1,0 +1,41 @@
+SCRABBLE — OFFICIAL RULES SUMMARY
+
+OVERVIEW
+Scrabble is a word game for 2–4 players. Players take turns placing letter tiles on a 15×15 board to form interlocking words, scoring points based on letter values and premium squares. The player with the highest score when the game ends wins.
+
+COMPONENTS
+A 15×15 game board with premium squares (Double Letter, Triple Letter, Double Word, Triple Word), 100 letter tiles (98 with letters and point values, 2 blank tiles worth 0 points), 4 tile racks, and a tile bag.
+
+SETUP
+Place the board between all players. Each player draws 7 tiles from the bag and places them on their rack. The first player must play a word that covers the center star square (a Double Word square). Players draw new tiles after each turn to refill their rack to 7 tiles, if tiles remain in the bag.
+
+FORMING WORDS
+On your turn, place one or more tiles on the board to form a single new word, or add tiles to existing words. All letters played in one turn must form one continuous line (horizontal or vertical). Every word formed in that turn — including secondary words created by crossing existing tiles — must be a valid word in the agreed dictionary.
+
+Blank tiles may be used as any letter but have no point value. Declare the letter when placing a blank; it cannot be changed for the rest of the game.
+
+SCORING
+Add the point values of all letters in each new word formed on your turn. Premium squares apply only on the turn a tile is first played on that square:
+- Double Letter Score (light blue): double the value of the letter placed on it.
+- Triple Letter Score (dark blue): triple the value of the letter placed on it.
+- Double Word Score (light red): double the total score of the word.
+- Triple Word Score (dark red): triple the total score of the word.
+Letter and word premiums are applied before summing the word. If a word covers multiple premium squares, multiply all applicable premiums for that word.
+
+BINGO BONUS
+If you use all 7 tiles on your rack in a single turn, add 50 bonus points after calculating the word score.
+
+TILE VALUES
+A=1, B=3, C=3, D=2, E=1, F=4, G=2, H=4, I=1, J=8, K=5, L=1, M=3, N=1, O=1, P=3, Q=10, R=1, S=1, T=1, U=1, V=4, W=4, X=8, Y=4, Z=10. Blank=0.
+
+PASSING AND EXCHANGING
+Instead of playing, you may pass your turn. You may also exchange any number of tiles from your rack for the same number from the bag, forfeiting your turn. You cannot exchange if fewer than 7 tiles remain in the bag.
+
+CHALLENGING
+If a player challenges a word, look it up in the agreed dictionary. If the word is invalid, the player removes the tiles and loses their turn. If the word is valid, the challenger loses their next turn.
+
+END OF GAME
+The game ends when one player uses all their tiles and the bag is empty, or when all players pass twice in a row. Players with tiles remaining subtract the sum of their remaining tile values from their score. The player who went out adds the sum of all other players' remaining tile values to their score.
+
+WINNING
+The player with the highest score when the game ends wins.

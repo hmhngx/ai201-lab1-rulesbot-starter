@@ -8,6 +8,7 @@ env/
 
 # ChromaDB — delete this folder to force re-ingestion
 chroma_db/
+chroma_eval/
 
 # Python
 __pycache__/
