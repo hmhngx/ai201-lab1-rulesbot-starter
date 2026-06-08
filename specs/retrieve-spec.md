@@ -55,7 +55,23 @@ Results should be ordered from most to least relevant (lowest to highest distanc
 *Sketch out what one item in your return list looks like as a concrete example. Where does each field come from in the query results?*
 
 ```
-[your answer here]
+One item in the returned list looks like:
+
+{
+    "text": "If you roll a 7, the active player moves the robber...",
+    "game": "Catan",
+    "distance": 0.31
+}
+
+Built by zipping the three parallel inner lists at the same index `i`
+(best match is i=0):
+
+  "text"     ← results["documents"][0][i]   # the stored chunk text
+  "game"     ← results["metadatas"][0][i]["game"]  # set during embed_and_store()
+  "distance" ← results["distances"][0][i]   # cosine distance; lower = more similar
+
+The final list is ordered most-to-least relevant (lowest distance first),
+matching ChromaDB's default ranking within the inner list.
 ```
 
 ---
@@ -65,7 +81,20 @@ Results should be ordered from most to least relevant (lowest to highest distanc
 *`_collection.query()` returns nested lists. Describe what index you need to access to get the actual list of results for a single query, and why the nesting exists.*
 
 ```
-[your answer here]
+_collection.query() accepts query_texts as a list so it can embed and search
+multiple queries in one call (batch mode). The response mirrors that shape:
+documents, metadatas, and distances are each a list-of-lists — the outer list
+has one entry per input query, and the inner list holds that query's ranked hits.
+
+We pass a single query (query_texts=[query]), so we index [0] on each field
+to unwrap the outer list:
+
+  results["documents"][0]   → list of chunk text strings
+  results["metadatas"][0]   → list of metadata dicts
+  results["distances"][0]   → list of float distance scores
+
+All three inner lists are the same length and aligned by index — result i in
+documents corresponds to result i in metadatas and distances.
 ```
 
 ---
@@ -75,7 +104,22 @@ Results should be ordered from most to least relevant (lowest to highest distanc
 *Will you filter out results above a certain distance score, or return all `n_results` regardless of how relevant they are? What are the tradeoffs of each approach?*
 
 ```
-[your answer here]
+Filter out chunks with cosine distance > 0.5 before returning. Keep only
+results at or below the threshold, still ordered lowest-distance first.
+
+Tradeoffs:
+  - Return all n_results: simpler code, always gives generate_response()
+    something to work with — but weak matches (distance > ~0.5 for this
+    embedding model, per system-design.md) can pollute the LLM context and
+    invite confident wrong answers.
+  - Filter in retrieve(): retrieve() acts as a quality gate — only
+    semantically plausible chunks reach the generator. May return fewer than
+    n_results or an empty list when nothing matches well, which is correct
+    for grounding: better to say "not found" than to answer from noise.
+
+We filter here (0.5) so retrieve()'s contract is "relevant chunks only."
+generate_response() can apply the same threshold again as a safety net, but
+retrieve() is the first line of defense.
 ```
 
 ---
@@ -97,14 +141,23 @@ Results should be ordered from most to least relevant (lowest to highest distanc
 **Test query and top result returned:**
 
 ```
-Query: [your test query]
-Top result game: [game name]
-Distance score: [score]
-Does it make sense? [yes / no / explain]
+Query: What happens when you roll a 7?
+Top result game: Catan
+Distance score: 0.466
+Does it make sense? Yes — the top chunk contains the "ROLLING A 7" section
+("When a 7 is rolled, no resources are produced…"). The two runners-up were
+Risk dice-combat rules (dist 0.597, 0.610) and were correctly filtered out
+by the 0.5 threshold. Only one chunk passed the filter for this query.
 ```
 
 **One thing about the query results that surprised you:**
 
 ```
-[your answer here]
+"How do you win?" returned sensible raw hits from three different games
+(Monopoly, Risk, Ticket to Ride — each chunk contained a WINNING section),
+but all three scored just above the 0.5 cutoff (0.507, 0.509, 0.522), so
+retrieve() returned an empty list. The chunks themselves were fine; the
+vague query just didn't embed close enough to any single game's winning rule.
+Distance scores did reflect relevance — specific queries score lower and
+land on the right game; vague cross-game queries cluster near the threshold.
 ```

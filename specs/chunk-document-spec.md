@@ -56,7 +56,7 @@ region of text at their boundary.
 often 1–3 sentences, which fits comfortably in this range. Going smaller
 would fragment individual rules; going larger would merge unrelated rules
 into one chunk, making retrieval less precise.
-```
+``` 
 
 ---
 
@@ -116,11 +116,15 @@ handle these cases better, at the cost of more implementation complexity.
 **Actual chunk count produced across all 8 rule books:**
 
 ```
-[your answer here]
+149 chunks total — Catan: 18, Clue: 21, Codenames: 16, Monopoly: 23,
+Pandemic: 18, Risk: 20, Ticket to Ride: 16, Uno: 17
 ```
 
 **One thing that surprised you or didn't match your expectations:**
 
 ```
-[your answer here]
+The entire knowledge base is only 149 chunks — roughly 16–23 per game — even
+though each rule book is thousands of characters long. Monopoly, the longest
+document (5,645 chars), still produced just 23 chunks, far fewer than I
+expected before seeing the sliding-window math in action.
 ```

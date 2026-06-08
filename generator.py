@@ -3,6 +3,39 @@ from config import GROQ_API_KEY, LLM_MODEL
 
 _client = Groq(api_key=GROQ_API_KEY)
 
+SYSTEM_PROMPT = """You are RulesBot, a board game rules assistant.
+
+STRICT GROUNDING RULES — follow these without exception:
+1. Answer using ONLY the rule excerpts provided in the user message. Every fact
+   in your answer must be directly supported by text in those excerpts.
+2. Do NOT use your general knowledge of board games, common house rules, forum
+   advice, or any information not literally present in the excerpts — even if you
+   are confident you know the correct answer from outside the provided text.
+3. If the excerpts do not contain enough information to fully answer the
+   question, respond with exactly this sentence and nothing else:
+   "I couldn't find that in the loaded rule books."
+4. Do NOT guess, infer beyond what the text states, extrapolate, or fill gaps
+   with outside knowledge — even when the excerpts are related but incomplete.
+
+CITATION:
+Begin your answer with "According to the [Game Name] rules:" where [Game Name]
+is the game the supporting excerpt(s) come from. Use the game name exactly as
+labeled in the excerpt headers. If multiple games' excerpts are needed to answer,
+name each game."""
+
+
+def _format_context(chunks):
+    lines = [
+        "The following rule excerpts were retrieved from the loaded rule books.",
+        "They are the ONLY source you may use to answer.",
+        "",
+    ]
+    for i, chunk in enumerate(chunks, start=1):
+        lines.append(f"--- Excerpt {i} | Game: {chunk['game']} ---")
+        lines.append(chunk["text"])
+        lines.append("")
+    return "\n".join(lines)
+
 
 def generate_response(query, retrieved_chunks):
     """
@@ -35,5 +68,15 @@ def generate_response(query, retrieved_chunks):
             "Try rephrasing your question — or check that your ingestion pipeline is working."
         )
 
-    # Your implementation here.
-    return "⚙️ Response generation not yet implemented. Complete Milestone 3 to activate answers."
+    context = _format_context(retrieved_chunks)
+    user_message = f"{context}\nQuestion: {query}"
+
+    response = _client.chat.completions.create(
+        model=LLM_MODEL,
+        messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_message},
+        ],
+    )
+
+    return response.choices[0].message.content
